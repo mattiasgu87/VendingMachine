@@ -24,7 +24,7 @@ namespace VendingMachine.Model
             }
         }
 
-        public bool RunMenu()
+        private bool RunMenu()
         {
             bool continueToRun = true;
 
@@ -63,7 +63,7 @@ namespace VendingMachine.Model
             return continueToRun;
         }
 
-        public void PrintMenu()
+        private void PrintMenu()
         {
             Console.Clear();
 
@@ -91,7 +91,7 @@ namespace VendingMachine.Model
             Console.Write("Select an option now: ");
         }
 
-        public void PrintChoices()
+        private void PrintChoices()
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Choices:");
@@ -104,7 +104,7 @@ namespace VendingMachine.Model
             Console.ResetColor();
         }
 
-        public void PrintProducts()
+        private void PrintProducts()
         {
             foreach (KeyValuePair<string, Product> pair in this.VendingMachineInstance.ShowAll())
             {
@@ -112,7 +112,7 @@ namespace VendingMachine.Model
             }
         }
 
-        public void PrintProductsWithInfo()
+        private void PrintProductsWithInfo()
         {
             Console.WriteLine("Products availible: \n");
 
@@ -123,7 +123,7 @@ namespace VendingMachine.Model
             }
         }
 
-        public void StartEndingTransaction()
+        private void StartEndingTransaction()
         {
             
             int[] money = this.VendingMachineInstance.EndTransaction();
@@ -140,7 +140,7 @@ namespace VendingMachine.Model
             Console.ReadKey();
         }
 
-        public void StartInsertingMoney()
+        private void StartInsertingMoney()
         {
             bool validDenomination = false;
 
@@ -184,7 +184,7 @@ namespace VendingMachine.Model
             }
         }
 
-        public void StartBuyProduct()
+        private void StartBuyProduct()
         {
             bool QuitPurchasing = false;
 

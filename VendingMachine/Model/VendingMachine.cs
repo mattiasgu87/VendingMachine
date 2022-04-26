@@ -6,23 +6,22 @@ namespace VendingMachine.Model
 {
     public class VendingMachine : IVending
     {
-        private bool IsRunning = false;
-        private int money;
-        public int Money { get { return money; } }     
+        private int MoneyPool;
+        public int Money { get { return MoneyPool; } }     
         public readonly int[] MoneyDenominations;
-        private Dictionary<string, Product> storage= new Dictionary<string, Product>();
+        private readonly Dictionary<string, Product> storage= new Dictionary<string, Product>();
 
         public VendingMachine()
         {
             MoneyDenominations = new int[8] {1, 5, 10, 20, 50, 100, 500, 1000};
-            money = 0;
+            MoneyPool = 0;
             this.Fill();
         }
 
         public int[] EndTransaction()
         {
-            int[] moneyBack = MakeChange(money);
-            money = 0;
+            int[] moneyBack = MakeChange(MoneyPool);
+            MoneyPool = 0;
 
             return moneyBack;
         }
@@ -33,7 +32,7 @@ namespace VendingMachine.Model
             {
                 if(insertedMoney == MoneyDenominations[i])
                 {
-                    money += insertedMoney;
+                    MoneyPool += insertedMoney;
                     return true;
                 }
             }
@@ -67,10 +66,10 @@ namespace VendingMachine.Model
 
             if(this.storage.ContainsKey(id))
             {
-                if (this.storage[id].Price <= this.money)
+                if (this.storage[id].Price <= this.MoneyPool)
                 {
                     product = this.storage[id];
-                    money -= this.storage[id].Price;
+                    MoneyPool -= this.storage[id].Price;
                     return true;
                 }
                 else
@@ -87,10 +86,10 @@ namespace VendingMachine.Model
 
             if (this.storage.ContainsKey(id))
             {
-                if (this.storage[id].Price <= this.money)
+                if (this.storage[id].Price <= this.MoneyPool)
                 {
                     product = this.storage[id];
-                    money -= this.storage[id].Price;
+                    MoneyPool -= this.storage[id].Price;
                     return true;
                 }
                 else
