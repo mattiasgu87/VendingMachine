@@ -10,7 +10,7 @@ namespace VendingMachine
         {
             Model.VendingMachine vm = new Model.VendingMachine();
 
-            Console.ReadLine();
+            vm.Run();
         }
     }
 }

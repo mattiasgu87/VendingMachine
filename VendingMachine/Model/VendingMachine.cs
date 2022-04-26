@@ -11,6 +11,8 @@ namespace VendingMachine.Model
         private int money;
         public int Money { get { return money; } }
 
+        private bool IsRunning = false;
+
         private Dictionary<string, Product> storage= new Dictionary<string, Product>();
 
         public VendingMachine()
@@ -18,6 +20,16 @@ namespace VendingMachine.Model
             MoneyDenominations = new int[8] {1, 5, 10, 20, 50, 100, 500, 1000};
             money = 0;
             this.Fill();
+        }
+
+        public void Run()
+        {
+            IsRunning = true;
+
+            while(IsRunning)
+            {
+                IsRunning = RunMenu();
+            }
         }
 
         public int[] EndTransaction()
@@ -45,9 +57,9 @@ namespace VendingMachine.Model
         public void Fill()
         {
             //Drinks
-            Drink fanta = new Drink("Fanta", "Orange flavoured soda", 20);
+            Drink fanta = new Drink("Fanta", "Orange flavoured soda", 20, true, 33);
             storage.Add("1", fanta);
-            Drink springWater = new Drink("Spring Water", "Refreshing spring water, no bubbles", 14);
+            Drink springWater = new Drink("Spring Water", "Refreshing spring water, no bubbles", 14, false, 35);
             storage.Add("2", springWater);
 
             //Sandwiches
@@ -67,7 +79,6 @@ namespace VendingMachine.Model
         {
             product = null;
 
-            //throw new NotImplementedException();
             if(this.storage.ContainsKey(id))
             {
                 if (this.storage[id].Price <= this.money)
@@ -81,6 +92,32 @@ namespace VendingMachine.Model
             }
             else
                 return false;
+        }
+
+        public bool Purchase(string id, out Product product, out string message)
+        {
+            product = null;
+            message = null;
+
+            if (this.storage.ContainsKey(id))
+            {
+                if (this.storage[id].Price <= this.money)
+                {
+                    product = this.storage[id];
+                    money -= this.storage[id].Price;
+                    return true;
+                }
+                else
+                {
+                    message = "Not enough money to buy product!";
+                    return false;
+                }                  
+            }
+            else
+            {
+                message = "No product found with id: " + id;
+                return false;
+            }
         }
 
         public Dictionary<string, Product> ShowAll()
@@ -106,6 +143,180 @@ namespace VendingMachine.Model
             }
 
             return counts;
+        }
+
+        public void PrintMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("************************");
+            Console.WriteLine("***VendingMachine1000***");
+            Console.WriteLine("************************");
+            Console.WriteLine();
+
+            Console.WriteLine("Products:");
+
+            PrintProducts();
+
+            Console.WriteLine();
+
+            PrintChoices();
+
+            Console.WriteLine("Current money inserted in machine: " + Money);
+
+            Console.WriteLine();
+
+            Console.Write("Select an option now: ");
+
+        }
+
+        public void PrintChoices()
+        {
+            Console.WriteLine("i: insert money into the vendingmachine");
+            Console.WriteLine("e: end transaction");
+            Console.WriteLine("b: buy an item from the vending machine");
+            Console.WriteLine("q: turn vendingmachine off");
+        }
+
+        public void PrintProducts()
+        {
+            foreach (KeyValuePair<string, Product> pair in storage)
+            {
+                Console.WriteLine(pair.Key + ": " + pair.Value.Name);
+            }
+        }
+
+        public void StartBuyProduct()
+        {
+            Console.Clear();
+            PrintProducts();
+
+            Console.WriteLine("\nq: quit to main menu\n");
+            Console.Write("Pick the product you want to buy:");
+
+            bool validProduct = false;
+
+            while (validProduct == false)
+            {
+                string pickedProduct = Console.ReadLine();
+
+                if (storage.ContainsKey(pickedProduct))
+                {
+                    validProduct = true;
+                    Product product;
+                    bool BoughtProduct = Purchase(pickedProduct, out product);
+
+                    if (BoughtProduct)
+                    {
+                        Console.WriteLine(product.Use());
+                        Console.Write("Continue..");
+                        Console.ReadKey();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to buy product!");
+                        Console.Write("Continue..");
+                        Console.ReadKey();
+                        validProduct = true;
+                    }
+                }
+                else if (pickedProduct == "q")
+                    break;
+                else
+                    Console.WriteLine("Try again!");
+            }          
+        }
+
+        public void StartInsertingMoney()
+        {
+            bool validDenomination = false;
+            bool validInt = false;
+            int money = 0;
+
+            while (validDenomination == false)
+            {
+
+                Console.Clear();
+
+                Console.WriteLine("Insert money, you can insert these denominations:");
+
+                foreach (int denomination in MoneyDenominations)
+                {
+                    Console.Write(denomination + " ");
+                }
+
+                Console.WriteLine("\nq: quit to main menu\n");
+                Console.Write("Insert money or quit: ");
+
+                string pickedProduct = Console.ReadLine();
+
+                if (pickedProduct == "q")
+                    break;
+
+                validInt = int.TryParse(pickedProduct, out money);
+                if(validInt)
+                {
+                    validDenomination = InsertMoney(money);
+                }
+                
+            }
+        }
+
+        public void StartEndingTransaction()
+        {
+            int[] money = EndTransaction();
+
+            Console.Clear();
+            Console.WriteLine("Returned money:");
+
+            for(int i = 0; i < MoneyDenominations.Length; i++)
+            {
+                Console.WriteLine(MoneyDenominations[i] + ": " + money[i]);
+            }
+
+            Console.Write("Continue..");
+            Console.ReadKey();
+        }
+
+        public bool RunMenu()
+        {
+            bool continueToRun = true;
+
+            PrintMenu();
+
+            char menuChoice;
+
+            Char.TryParse(Console.ReadLine(), out menuChoice);
+
+            switch(menuChoice)
+            {
+                case 'i':
+                    Console.WriteLine("Insert Money");
+                    StartInsertingMoney();
+                    break;
+
+                case 'e':
+                    Console.WriteLine("End transaction");
+                    StartEndingTransaction();
+                    break;
+
+                case 'b':
+                    Console.WriteLine("Buy product");
+                    StartBuyProduct();
+                    break;
+
+                case 'q':
+                    Console.WriteLine("Quit");
+                    continueToRun = false;
+                    break;
+
+                default:
+                    Console.WriteLine("\ninvalid menu choice!");
+                    break;
+            }
+
+            return continueToRun;
         }
     }
 }
