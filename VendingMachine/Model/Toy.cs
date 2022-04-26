@@ -6,14 +6,24 @@ namespace VendingMachine.Model
 {
     public class Toy : Product
     {
+        public bool IsBatteryPowered { get; set; }
+        public ushort RequiredAge { get; set; }
+
         public Toy(string name, string info, int price) : base(name, info, price)
         {
+            IsBatteryPowered = false;
+            RequiredAge = 3;
+        }
 
+        public Toy(string name, string info, int price, bool isBatteryPowered, ushort requiredAge) : base(name, info, price)
+        {
+            IsBatteryPowered = isBatteryPowered;
+            RequiredAge = requiredAge;
         }
 
         public override string Examine()
         {
-            return this.Name + ": price: " + this.Price + " info: " + Info;
+            return this.Name + ": price: " + this.Price + " info: " + Info + "\n battery powered: " + IsBatteryPowered + "\n required age: " + RequiredAge + " years";
         }
 
         public override string Use()

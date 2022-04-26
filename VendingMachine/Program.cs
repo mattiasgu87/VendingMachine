@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VendingMachine.Model;
 
 namespace VendingMachine
 {
@@ -8,9 +9,9 @@ namespace VendingMachine
     {
         static void Main(string[] args)
         {
-            Model.VendingMachine vm = new Model.VendingMachine();
+            VendingConsoleController VMC = new VendingConsoleController();
 
-            Console.ReadLine();
+            VMC.Run();
         }
     }
 }

@@ -6,24 +6,22 @@ namespace VendingMachine.Model
 {
     public class VendingMachine : IVending
     {
+        private int MoneyPool;
+        public int Money { get { return MoneyPool; } }     
         public readonly int[] MoneyDenominations;
-
-        private int money;
-        public int Money { get { return money; } }
-
-        private Dictionary<string, Product> storage= new Dictionary<string, Product>();
+        private readonly Dictionary<string, Product> storage= new Dictionary<string, Product>();
 
         public VendingMachine()
         {
             MoneyDenominations = new int[8] {1, 5, 10, 20, 50, 100, 500, 1000};
-            money = 0;
+            MoneyPool = 0;
             this.Fill();
         }
 
         public int[] EndTransaction()
         {
-            int[] moneyBack = MakeChange(money);
-            money = 0;
+            int[] moneyBack = MakeChange(MoneyPool);
+            MoneyPool = 0;
 
             return moneyBack;
         }
@@ -34,25 +32,24 @@ namespace VendingMachine.Model
             {
                 if(insertedMoney == MoneyDenominations[i])
                 {
-                    money += insertedMoney;
+                    MoneyPool += insertedMoney;
                     return true;
                 }
             }
-
             return false;
         }
 
         public void Fill()
         {
             //Drinks
-            Drink fanta = new Drink("Fanta", "Orange flavoured soda", 20);
+            Drink fanta = new Drink("Fanta", "Orange flavoured soda", 20, true, 33);
             storage.Add("1", fanta);
-            Drink springWater = new Drink("Spring Water", "Refreshing spring water, no bubbles", 14);
+            Drink springWater = new Drink("Spring Water", "Refreshing spring water, no bubbles", 14, false, 35);
             storage.Add("2", springWater);
 
             //Sandwiches
-            Sandwich clubSanwich = new Sandwich("Club Sandwich", "Sandwich with grilled chicken and lettuce under bacon", 55);
-            storage.Add("21", clubSanwich);
+            Sandwich clubSandwich = new Sandwich("Club Sandwich", "Sandwich with grilled chicken and lettuce under bacon", 55);
+            storage.Add("21", clubSandwich);
             Sandwich tunaSanwich = new Sandwich("Tuna Sandwich", "Sandwich with tuna, cheese and spices", 50);
             storage.Add("22", tunaSanwich);
 
@@ -67,13 +64,12 @@ namespace VendingMachine.Model
         {
             product = null;
 
-            //throw new NotImplementedException();
             if(this.storage.ContainsKey(id))
             {
-                if (this.storage[id].Price <= this.money)
+                if (this.storage[id].Price <= this.MoneyPool)
                 {
                     product = this.storage[id];
-                    money -= this.storage[id].Price;
+                    MoneyPool -= this.storage[id].Price;
                     return true;
                 }
                 else
@@ -81,6 +77,32 @@ namespace VendingMachine.Model
             }
             else
                 return false;
+        }
+
+        public bool Purchase(string id, out Product product, out string message)
+        {
+            product = null;
+            message = null;
+
+            if (this.storage.ContainsKey(id))
+            {
+                if (this.storage[id].Price <= this.MoneyPool)
+                {
+                    product = this.storage[id];
+                    MoneyPool -= this.storage[id].Price;
+                    return true;
+                }
+                else
+                {
+                    message = "Not enough money to buy product!";
+                    return false;
+                }                  
+            }
+            else
+            {
+                message = "No product found with id: " + id;
+                return false;
+            }
         }
 
         public Dictionary<string, Product> ShowAll()

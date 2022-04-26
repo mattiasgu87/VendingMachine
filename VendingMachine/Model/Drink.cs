@@ -6,14 +6,24 @@ namespace VendingMachine.Model
 {
     public class Drink : Product
     {
+        public bool IsCarbonated { get; set; }
+        public int Centiliters { get; set; }
+
         public Drink(string name, string info, int price) : base(name, info, price)
         {
+            IsCarbonated = false;
+            Centiliters = 33;
+        }
 
+        public Drink(string name, string info, int price, bool isCarbonated, int centiliters) : base(name, info, price)
+        {
+            IsCarbonated = isCarbonated;
+            Centiliters = centiliters;
         }
 
         public override string Examine()
         {
-            return this.Name + ": price: " + this.Price + " info: " + Info;
+            return this.Name + ": price: " + this.Price + " info: " + Info + "\n carbonated: " + IsCarbonated + "\n centiliters: " + Centiliters;
         }
 
         public override string Use()
