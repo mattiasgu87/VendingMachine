@@ -63,8 +63,8 @@ namespace VendingMachine.Model
             storage.Add("2", springWater);
 
             //Sandwiches
-            Sandwich clubSanwich = new Sandwich("Club Sandwich", "Sandwich with grilled chicken and lettuce under bacon", 55);
-            storage.Add("21", clubSanwich);
+            Sandwich clubSandwich = new Sandwich("Club Sandwich", "Sandwich with grilled chicken and lettuce under bacon", 55);
+            storage.Add("21", clubSandwich);
             Sandwich tunaSanwich = new Sandwich("Tuna Sandwich", "Sandwich with tuna, cheese and spices", 50);
             storage.Add("22", tunaSanwich);
 
@@ -331,7 +331,6 @@ namespace VendingMachine.Model
                     Console.WriteLine("\ninvalid menu choice!");
                     break;
             }
-
             return continueToRun;
         }
     }

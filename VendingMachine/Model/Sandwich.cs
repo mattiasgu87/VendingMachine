@@ -23,7 +23,7 @@ namespace VendingMachine.Model
 
         public override string Examine()
         {
-            return this.Name + ": price: " + this.Price + " info: " + Info;
+            return this.Name + ": price: " + this.Price + " info: " + Info + "\n gluten free: " + IsGlutenFree + "\n weight: " + WeightInGrams + "g";
         }
 
         public override string Use()

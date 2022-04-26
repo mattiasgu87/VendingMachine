@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using VendingMachine;
 using System.Collections.Generic;
+using VendingMachine.Model;
 
 namespace VendingMachineTesting
 {
@@ -62,20 +63,28 @@ namespace VendingMachineTesting
 
         [Fact]
         public void ReturnCopiedCollection()
+        {          
+            VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
+
+            Dictionary<string, VendingMachine.Model.Product> sutStorageExpected = sutVM.ShowAll();
+            Dictionary<string, VendingMachine.Model.Product> sutStorageActual = sutVM.ShowAll();
+
+            sutStorageActual.Clear();
+
+            sutStorageActual = sutVM.ShowAll();
+
+            Assert.Equal(sutStorageExpected, sutStorageActual);
+        }
+
+        [Fact]
+        public void BeFilled()
         {
             VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
 
-            Dictionary<string, VendingMachine.Model.Product> sutStorage = sutVM.ShowAll();
+            int sutProductsExpected = 6;
+            int sutProductsActual = sutVM.ShowAll().Count;
 
-            sutStorage.Clear();
-
-            sutStorage = sutVM.ShowAll();
-
-            VendingMachine.Model.Toy sutCar = new VendingMachine.Model.Toy("Car", "Basic four-wheeled toy car", 200);
-
-            Assert.Equal("Car", sutCar.Name);
-            Assert.Equal(200, sutCar.Price);
-            Assert.Equal("Basic four-wheeled toy car", sutCar.Info);
+            Assert.Equal(sutProductsExpected, sutProductsActual);
         }
         
         [Fact]
