@@ -6,13 +6,10 @@ namespace VendingMachine.Model
 {
     public class VendingMachine : IVending
     {
-        public readonly int[] MoneyDenominations;
-
-        private int money;
-        public int Money { get { return money; } }
-
         private bool IsRunning = false;
-
+        private int money;
+        public int Money { get { return money; } }     
+        public readonly int[] MoneyDenominations;
         private Dictionary<string, Product> storage= new Dictionary<string, Product>();
 
         public VendingMachine()
@@ -50,7 +47,6 @@ namespace VendingMachine.Model
                     return true;
                 }
             }
-
             return false;
         }
 
