@@ -175,7 +175,9 @@ namespace VendingMachine.Model
             Console.WriteLine("i: insert money into the vendingmachine");
             Console.WriteLine("e: end transaction");
             Console.WriteLine("b: buy an item from the vending machine");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("q: turn vendingmachine off");
+            Console.ResetColor();
         }
 
         public void PrintProducts()
@@ -186,46 +188,60 @@ namespace VendingMachine.Model
             }
         }
 
-        public void StartBuyProduct()
+        public void PrintProductsWithInfo()
         {
-            Console.Clear();
-            PrintProducts();
+            Console.WriteLine("Products availible: \n");
 
-            Console.WriteLine("\nq: quit to main menu\n");
-            Console.Write("Pick the product you want to buy:");
-
-            bool validProduct = false;
-
-            while (validProduct == false)
+            foreach (KeyValuePair<string, Product> pair in storage)
             {
+                Console.WriteLine(pair.Key + ": " + pair.Value.Name);
+                Console.WriteLine(pair.Value.Examine() + "\n");
+            }
+        }
+
+        public void StartBuyProduct()
+        {       
+            bool QuitPurchasing = false;
+
+            while (QuitPurchasing == false)
+            {
+                Console.Clear();
+                PrintProductsWithInfo();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("q: quit to main menu\n");
+                Console.ResetColor();
+                
+                Console.Write("Pick the product you want to buy:");
+
                 string pickedProduct = Console.ReadLine();
-
-                if (storage.ContainsKey(pickedProduct))
+              
+                if (pickedProduct == "q")
+                    break;
+                else
                 {
-                    validProduct = true;
                     Product product;
-                    bool BoughtProduct = Purchase(pickedProduct, out product);
+                    string message;
 
-                    if (BoughtProduct)
+                    bool PurchaseResult = Purchase(pickedProduct, out product, out message);
+
+                    if(PurchaseResult)
                     {
                         Console.WriteLine(product.Use());
-                        Console.Write("Continue..");
-                        Console.ReadKey();
-                        break;
+                        QuitPurchasing = true;
+                        Console.Write("Press Enter to continue..");
+                        Console.ReadLine();
                     }
                     else
                     {
-                        Console.WriteLine("Failed to buy product!");
-                        Console.Write("Continue..");
-                        Console.ReadKey();
-                        validProduct = true;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(message);
+                        Console.ResetColor();
+                        Console.Write("Press Enter to continue..");
+                        Console.ReadLine();
                     }
                 }
-                else if (pickedProduct == "q")
-                    break;
-                else
-                    Console.WriteLine("Try again!");
-            }          
+            }
         }
 
         public void StartInsertingMoney()
