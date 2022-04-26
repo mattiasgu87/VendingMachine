@@ -25,5 +25,29 @@ namespace VendingMachineTesting
 
             Assert.Equal(expectedResult, bunny.Examine());
         }
+
+        [Fact]
+        public void HaveAWorkingPrimaryConstructor()
+        {
+            Toy toy = new Toy("Ball", "A medium sized white ball", 75);
+
+            bool expectedBatteryPowered = false;
+            int expectedRequiredAge = 3;
+
+            Assert.Equal(expectedBatteryPowered, toy.IsBatteryPowered);
+            Assert.Equal(expectedRequiredAge, toy.RequiredAge);
+        }
+
+        [Fact]
+        public void HaveAWorkingSecondaryConstructor()
+        {
+            Toy toy = new Toy("RC Race Car", "A fast, remote controlled race car", 400, true, 12);
+
+            bool expectedBatteryPowered = true;
+            int expectedRequiredAge = 12;
+
+            Assert.Equal(expectedBatteryPowered, toy.IsBatteryPowered);
+            Assert.Equal(expectedRequiredAge, toy.RequiredAge);
+        }
     }
 }

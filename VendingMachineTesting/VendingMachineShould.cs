@@ -66,8 +66,8 @@ namespace VendingMachineTesting
         {          
             VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
 
-            Dictionary<string, VendingMachine.Model.Product> sutStorageExpected = sutVM.ShowAll();
-            Dictionary<string, VendingMachine.Model.Product> sutStorageActual = sutVM.ShowAll();
+            Dictionary<string, Product> sutStorageExpected = sutVM.ShowAll();
+            Dictionary<string, Product> sutStorageActual = sutVM.ShowAll();
 
             sutStorageActual.Clear();
 
@@ -92,7 +92,7 @@ namespace VendingMachineTesting
         {
             VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
 
-            VendingMachine.Model.Product sutProduct;
+            Product sutProduct;
 
             Assert.False(sutVM.Purchase("1", out sutProduct));
         }
@@ -103,9 +103,30 @@ namespace VendingMachineTesting
             VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
             sutVM.InsertMoney(1000);
 
-            VendingMachine.Model.Product sutProduct;
+            Product expectedProduct = new Drink("Fanta", "Orange flavoured soda", 20, true, 33);
+            Product sutProduct;
 
             Assert.True(sutVM.Purchase("1", out sutProduct));
+
+            Assert.Equal(expectedProduct.Info, sutProduct.Info);
+            Assert.Equal(expectedProduct.Name, sutProduct.Name);
+            Assert.Equal(expectedProduct.Price, sutProduct.Price);
+        }
+
+        [Fact]
+        public void GetProductOneWhenBought()
+        {
+            VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
+            sutVM.InsertMoney(1000);
+
+            Product expectedProduct = new Drink("Fanta", "Orange flavoured soda", 20, true, 33);
+            Product sutProduct;
+
+            sutVM.Purchase("1", out sutProduct);
+
+            Assert.Equal(expectedProduct.Info, sutProduct.Info);
+            Assert.Equal(expectedProduct.Name, sutProduct.Name);
+            Assert.Equal(expectedProduct.Price, sutProduct.Price);
         }
 
         [Fact]
@@ -114,7 +135,7 @@ namespace VendingMachineTesting
             VendingMachine.Model.VendingMachine sutVM = new VendingMachine.Model.VendingMachine();
             sutVM.InsertMoney(1000);
 
-            VendingMachine.Model.Product sutProduct;
+            Product sutProduct;
 
             sutVM.Purchase("1", out sutProduct);
 

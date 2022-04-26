@@ -25,5 +25,29 @@ namespace VendingMachineTesting
 
             Assert.Equal(expectedResult, clubSandwich.Examine());
         }
+
+        [Fact]
+        public void HaveAWorkingPrimaryConstructor()
+        {
+            Sandwich sandwich = new Sandwich("Cheese sandwich", "Simple sandwich with cheese", 35);
+
+            bool expectedGlutenfree = false;
+            int expectedWeightInGrams = 90;
+
+            Assert.Equal(expectedGlutenfree, sandwich.IsGlutenFree);
+            Assert.Equal(expectedWeightInGrams, sandwich.WeightInGrams);
+        }
+
+        [Fact]
+        public void HaveAWorkingSecondaryConstructor()
+        {
+            Sandwich sandwich = new Sandwich("Cucumber sandwich", "Vegan, glutenfree cucumber sandwich", 30, true, 80);
+
+            bool expectedGlutenfree = true;
+            int expectedWeightInGrams = 80;
+
+            Assert.Equal(expectedGlutenfree, sandwich.IsGlutenFree);
+            Assert.Equal(expectedWeightInGrams, sandwich.WeightInGrams);
+        }
     }
 }
